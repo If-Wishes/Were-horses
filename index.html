@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <meta name="theme-color" content="#ff69b4">
+  <link rel="manifest" href="manifest.json">
+  <title>Timeless Love | A Love Story Magazine</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- GSAP for smooth animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --pink-primary: #ff69b4;
+      --blue-primary: #6495ed;
+      --gold-primary: #ffd700;
+      --dark-bg: #1a0f1a;
+      --glass-bg: rgba(255, 255, 255, 0.15);
+      --glass-border: rgba(255, 255, 255, 0.3);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      background: linear-gradient(135deg, #ffe6f0 0%, #e0f0ff 100%);
+      transition: background 0.5s ease;
+    }
+
+    /* Theme Switcher - only two colors 💙🩷 */
+    .theme-switcher {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      z-index: 200;
+      background: linear-gradient(135deg, rgba(255,105,180,0.95), rgba(100,149,237,0.95));
+      border-radius: 50px;
+      padding: 10px 15px;
+      display: flex;
+      gap: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .theme-btn {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.2s;
+      border: 2px solid white;
+    }
+
+    .theme-btn:hover {
+      transform: scale(1.1);
+    }
+    .theme-pink { background: linear-gradient(135deg, #ff69b4, #ffb6c1); }
+    .theme-blue { background: linear-gradient(135deg, #6495ed, #89CFF0); }
+
+    body.blue-theme {
+      background: linear-gradient(135deg, #e6f0ff 0%, #cfe3ff 100%);
+    }
+
+    /* Password Overlay */
+    .password-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(0,0,0,0.95), rgba(50,30,40,0.98));
+      backdrop-filter: blur(20px);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.5s ease;
+    }
+
+    .password-box {
+      background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+      backdrop-filter: blur(10px);
+      padding: 3rem;
+      border-radius: 60px;
+      text-align: center;
+      border: 2px solid rgba(255,105,180,0.5);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+      animation: fadeInUp 0.6s ease;
+    }
+
+    .password-box input {
+      padding: 15px 25px;
+      font-size: 1.2rem;
+      border: 2px solid #ff69b4;
+      border-radius: 50px;
+      background: rgba(255,255,255,0.9);
+      outline: none;
+      width: 250px;
+      text-align: center;
+    }
+
+    /* Music & Sound Controls */
+    .music-control, .sound-control {
+      position: fixed;
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #ff69b4, #6495ed);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 200;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transition: all 0.3s;
+    }
+
+    .music-control { bottom: 20px; right: 20px; }
+    .sound-control { bottom: 20px; right: 90px; }
+
+    /* Countdown Timer */
+    .countdown-timer {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, rgba(255,105,180,0.95), rgba(100,149,237,0.95));
+      padding: 12px 20px;
+      border-radius: 50px;
+      color: white;
+      font-weight: 600;
+      z-index: 100;
+      font-size: 0.9rem;
+    }
+
+    /* Love Meter */
+    .love-meter {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: linear-gradient(135deg, rgba(255,105,180,0.95), rgba(100,149,237,0.95));
+      padding: 12px 20px;
+      border-radius: 50px;
+      color: white;
+      font-weight: 600;
+      z-index: 100;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .meter-bar {
+      width: 100%;
+      height: 4px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 2px;
+      margin-top: 5px;
+      overflow: hidden;
+    }
+
+    .meter-fill {
+      width: 78%;
+      height: 100%;
+      background: white;
+      border-radius: 2px;
+      transition: width 0.5s;
+    }
+
+    /* Navigation */
+    .nav-tabs {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(135deg, rgba(255, 182, 193, 0.95), rgba(135, 206, 235, 0.95));
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 1rem 2rem;
+      z-index: 100;
+      flex-wrap: wrap;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+
+    .tab-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 0.7rem 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      border-radius: 50px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tab-btn.active {
+      background: white;
+      color: #ff69b4;
+    }
+
+    /* Page Container - Magazine Style */
+    .page-container {
+      margin-top: 80px;
+      padding: 2rem;
+      max-width: 1400px;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      z-index: 20;
+      min-height: calc(100vh - 80px);
+    }
+
+    .page {
+      position: absolute;
+      width: 100%;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+      pointer-events: none;
+    }
+
+    .page.active-page {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: all;
+      position: relative;
+    }
+
+    /* Magazine Cards - NO BLUR, solid elegance */
+    .section-card {
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 32px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      border: 1px solid rgba(255, 105, 180, 0.2);
+      box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1);
+      transition: all 0.3s;
+    }
+
+    /* Magazine Grid - 150+ pages style */
+    .magazine-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 2rem;
+    }
+
+    .magazine-article {
+      background: white;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+      transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      cursor: pointer;
+      border-bottom: 4px solid #ff69b4;
+    }
+
+    .magazine-article:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 24px 36px -12px rgba(0,0,0,0.2);
+    }
+
+    .article-img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      transition: transform 0.5s;
+    }
+
+    .magazine-article:hover .article-img {
+      transform: scale(1.03);
+    }
+
+    .article-content {
+      padding: 1.6rem;
+    }
+
+    .article-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #ff69b4, #6495ed);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 0.8rem;
+    }
+
+    .article-excerpt {
+      color: #2c3e4e;
+      line-height: 1.5;
+      font-size: 0.95rem;
+    }
+
+    .love-quote {
+      font-style: italic;
+      border-left: 4px solid #ff69b4;
+      padding-left: 1rem;
+      margin: 1rem 0;
+      color: #555;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      .page-container { padding: 1rem; margin-top: 100px; }
+      .nav-tabs { gap: 0.3rem; padding: 0.8rem 1rem; }
+      .tab-btn { padding: 0.4rem 1rem; font-size: 0.8rem; }
+      .magazine-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Secret Section */
+    .secret-section {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, #000000cc, #330000cc);
+      backdrop-filter: blur(20px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+    }
+    .secret-section.active { display: flex; }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      visibility: hidden;
+      opacity: 0;
+      transition: 0.25s;
+    }
+    .modal-overlay.active { visibility: visible; opacity: 1; }
+
+    .story-mode-indicator {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      background: linear-gradient(135deg, #ff69b4, #6495ed);
+      color: white;
+      padding: 5px 12px;
+      border-radius: 30px;
+      font-size: 0.7rem;
+      z-index: 150;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .live-message-area {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      max-width: 380px;
+      background: white;
+      border-radius: 50px;
+      padding: 8px 18px;
+      display: flex;
+      gap: 10px;
+      z-index: 150;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      border: 1px solid #ff69b4;
+    }
+    .live-message-display {
+      position: fixed;
+      bottom: 90px;
+      left: 20px;
+      background: linear-gradient(135deg, #ff69b4, #6495ed);
+      color: white;
+      padding: 8px 18px;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      max-width: 280px;
+      z-index: 150;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div id="passwordOverlay" class="password-overlay">
+  <div class="password-box">
+    <h2 style="color:#ff69b4;"><i class="fas fa-heart"></i> For Your Eyes Only</h2>
+    <input type="password" id="passwordInput" placeholder="Enter the code">
+    <br>
+    <button onclick="checkPassword()" style="margin-top:1rem; padding:12px 30px; background:linear-gradient(135deg,#ff69b4,#6495ed); border:none; border-radius:50px; color:white; cursor:pointer;">Unlock ❤️</button>
+    <div id="errorMsg" style="color:#ff69b4; margin-top:1rem;"></div>
+  </div>
+</div>
+
+<div id="mainContent" style="display:none;">
+  <div class="theme-switcher">
+    <div class="theme-btn theme-pink" onclick="setTheme('pink')"></div>
+    <div class="theme-btn theme-blue" onclick="setTheme('blue')"></div>
+  </div>
+
+  <div class="music-control" onclick="toggleMusic()"><i class="fas fa-music"></i></div>
+  <div class="sound-control" onclick="toggleSound()"><i class="fas fa-volume-up"></i></div>
+
+  <div class="love-meter" onclick="showLoveStats()">
+    <i class="fas fa-heart"></i> Our Journey
+    <div class="meter-bar"><div class="meter-fill" id="loveMeterFill"></div></div>
+  </div>
+
+  <div class="countdown-timer"><i class="fas fa-clock"></i> <span id="countdown"></span></div>
+  <div class="story-mode-indicator" onclick="toggleStoryMode()"><i class="fas fa-play"></i> Auto Story</div>
+
+  <div class="live-message-area">
+    <i class="fas fa-pen-heart" style="color:#ff69b4;"></i>
+    <input type="text" id="liveMessageInput" placeholder="Write something for me...">
+    <button onclick="sendLiveMessage()" style="background:none; border:none; color:#ff69b4; cursor:pointer;"><i class="fas fa-paper-plane"></i></button>
+  </div>
+  <div class="live-message-display" id="liveMessageDisplay"></div>
+
+  <div class="nav-tabs">
+    <button class="tab-btn active" data-page="home"><i class="fas fa-home"></i> Home</button>
+    <button class="tab-btn" data-page="gallery"><i class="fas fa-images"></i> Love Stories</button>
+    <button class="tab-btn" data-page="chats"><i class="fas fa-comment-dots"></i> Heart Letters</button>
+    <button class="tab-btn" data-page="romance"><i class="fas fa-heart"></i> Eternal Vows</button>
+    <button class="tab-btn" data-page="memory"><i class="fas fa-book-open"></i> Memory Book</button>
+  </div>
+
+  <div class="page-container">
+    <div id="home-page" class="page active-page">
+      <div class="section-card">
+        <h1 id="greetingMessage" style="font-size:3rem; font-family:'Playfair Display';">My Timeless Muse 💙🩷</h1>
+        <div id="typingText" style="font-size:1.3rem; margin:1rem 0; min-height:90px; font-weight:300;"></div>
+        <div style="font-size:2rem; text-align:center;">✨ Every page tells our endless love ✨</div>
+        <div class="love-quote" style="margin-top:20px;">“In your eyes, I found my home. In your heart, I found eternity.”</div>
+      </div>
+    </div>
+
+    <div id="gallery-page" class="page">
+      <div class="section-card">
+        <h2 class="section-title"><i class="fas fa-book-open"></i> 150+ Chapters of Our Love Story</h2>
+        <div class="magazine-grid" id="loveStoryGrid"></div>
+      </div>
+    </div>
+
+    <div id="chats-page" class="page">
+      <div class="section-card">
+        <h2 class="section-title"><i class="fas fa-envelope-open-text"></i> Heartfelt Letters</h2>
+        <div class="magazine-grid" id="lettersGrid"></div>
+      </div>
+    </div>
+
+    <div id="romance-page" class="page">
+      <div class="section-card">
+        <h2 class="section-title"><i class="fas fa-feather-alt"></i> Eternal Vows & Promises</h2>
+        <div class="magazine-grid" id="vowsGrid"></div>
+      </div>
+    </div>
+
+    <div id="memory-page" class="page">
+      <div class="section-card">
+        <h2 class="section-title"><i class="fas fa-tree"></i> Our Forever Timeline</h2>
+        <div class="magazine-grid" id="timelineGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="secretSection" class="secret-section">
+    <div style="background:rgba(0,0,0,0.8); padding:2rem; border-radius:40px;">
+      <i class="fas fa-heart" style="font-size:4rem; color:#ff69b4;"></i>
+      <h2>💙 Secret Message 🩷</h2>
+      <p style="margin-top:1rem;">You are the melody that never fades. Every heartbeat echoes your name. I love you beyond time, beyond words.</p>
+      <button onclick="closeSecret()" style="margin-top:1rem; padding:10px 30px; background:#ff69b4; border:none; border-radius:50px; color:white;">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const CORRECT_PASSWORD = "love2024";
+  function checkPassword() {
+    const input = document.getElementById('passwordInput').value;
+    if (input === CORRECT_PASSWORD) {
+      document.getElementById('passwordOverlay').style.display = 'none';
+      document.getElementById('mainContent').style.display = 'block';
+      init();
+    } else {
+      document.getElementById('errorMsg').innerHTML = 'Wrong code! Try again ❤️';
+    }
+  }
+  document.getElementById('passwordInput')?.addEventListener('keypress', (e) => { if (e.key === 'Enter') checkPassword(); });
+
+  let soundEnabled = true;
+  let clickSound = null, chimeSound = null;
+  function initSounds() { clickSound = new Audio('data:audio/wav;base64,U3RlYWQgbm8gY2xpY2sgc291bmQgYXZhaWxhYmxl'); chimeSound = new Audio('data:audio/wav;base64,U3RlYWQgbm8gY2hpbWUgc291bmQgYXZhaWxhYmxl'); }
+  function playClickSound() { if (soundEnabled && clickSound) clickSound.play().catch(e=>{}); }
+  function playChimeSound() { if (soundEnabled && chimeSound) chimeSound.play().catch(e=>{}); }
+  function toggleSound() { soundEnabled = !soundEnabled; document.querySelector('.sound-control i').className = soundEnabled ? 'fas fa-volume-up' : 'fas fa-volume-mute'; }
+
+  function setTheme(theme) {
+    document.body.className = '';
+    if (theme === 'blue') document.body.classList.add('blue-theme');
+    localStorage.setItem('theme', theme);
+    playClickSound();
+  }
+
+  let audio = null, isPlaying = false;
+  function initMusic() { audio = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'); audio.loop = true; audio.volume = 0.2; }
+  function toggleMusic() { if (!audio) return; if (isPlaying) { audio.pause(); document.querySelector('.music-control i').className = 'fas fa-music-slash'; } else { audio.play(); document.querySelector('.music-control i').className = 'fas fa-music'; } isPlaying = !isPlaying; }
+
+  const startDate = new Date('2023-01-01');
+  function updateLoveMeter() { const days = Math.floor((new Date() - startDate) / (1000*60*60*24)); const percent = Math.min(100, Math.floor((days/365)*100)); document.getElementById('loveMeterFill').style.width = `${percent}%`; return { days, percent }; }
+  function showLoveStats() { const { days, percent } = updateLoveMeter(); alert(`💙🩷 Our Eternal Bond 🩷💙\n\n${days} days of pure magic.\nLove maturity: ${percent}% towards infinity.\nYou are my greatest adventure.`); playChimeSound(); }
+
+  function startCountdown() { const birthday = new Date(); birthday.setMonth(11); birthday.setDate(25); if (birthday < new Date()) birthday.setFullYear(birthday.getFullYear()+1); function update() { const diff = birthday - new Date(); if(diff<=0){ document.getElementById('countdown').innerHTML='🎂 Forever Young 🎂'; return; } const days = Math.floor(diff/(86400000)); const hours = Math.floor((diff%86400000)/3600000); document.getElementById('countdown').innerHTML = `${days}d ${hours}h`; } update(); setInterval(update,3600000); }
+
+  function updateGreeting() { const hour = new Date().getHours(); let greeting = hour<12 ? 'Good Morning' : (hour<18 ? 'Good Afternoon' : 'Good Evening'); document.getElementById('greetingMessage').innerHTML = `${greeting}, My Eternal Love 💙🩷`; }
+
+  const romanticMessages = [
+    "You are the poetry my soul always wanted to write. 💙",
+    "Every sunrise is a reminder of your beauty. 🩷",
+    "Your laughter is the soundtrack of my happiest days.",
+    "In a universe of chaos, you are my peace.",
+    "Loving you is like breathing — effortless and essential."
+  ];
+  let msgIdx = 0, charIdx = 0;
+  function startTypingAnimation() {
+    const el = document.getElementById('typingText');
+    function typeNext() {
+      if(charIdx < romanticMessages[msgIdx].length){ el.innerHTML += romanticMessages[msgIdx].charAt(charIdx); charIdx++; setTimeout(typeNext,70); }
+      else { setTimeout(()=>{ el.innerHTML = ''; charIdx=0; msgIdx = (msgIdx+1)%romanticMessages.length; setTimeout(typeNext,400); },2800); }
+    }
+    typeNext();
+  }
+
+  function switchPage(pageId) {
+    playClickSound();
+    const current = document.querySelector('.page.active-page');
+    const newPage = document.getElementById(`${pageId}-page`);
+    if(current === newPage) return;
+    gsap.to(current, { opacity: 0, duration: 0.25, onComplete: () => { current.classList.remove('active-page'); newPage.classList.add('active-page'); gsap.fromTo(newPage, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.4 }); } });
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelector(`.tab-btn[data-page="${pageId}"]`).classList.add('active');
+  }
+
+  let storyMode = false, storyInterval = null, storyIdx = 0;
+  const storyPages = ['home', 'gallery', 'chats', 'romance', 'memory'];
+  function toggleStoryMode() {
+    storyMode = !storyMode;
+    const ind = document.querySelector('.story-mode-indicator');
+    if(storyMode) {
+      storyInterval = setInterval(() => { storyIdx = (storyIdx+1)%storyPages.length; switchPage(storyPages[storyIdx]); }, 5500);
+      ind.innerHTML = '<i class="fas fa-stop"></i> Stop Story';
+      playChimeSound();
+    } else { clearInterval(storyInterval); ind.innerHTML = '<i class="fas fa-play"></i> Auto Story'; }
+  }
+
+  function sendLiveMessage() {
+    const msg = document.getElementById('liveMessageInput').value.trim();
+    if(!msg) return;
+    const disp = document.getElementById('liveMessageDisplay');
+    disp.innerHTML = `<i class="fas fa-heart"></i> ${msg}`;
+    disp.style.display = 'block';
+    document.getElementById('liveMessageInput').value = '';
+    setTimeout(() => { disp.style.opacity = '0'; setTimeout(() => { disp.style.display = 'none'; disp.style.opacity = '1'; }, 2000); }, 3000);
+    playChimeSound();
+  }
+
+  document.addEventListener('dblclick', () => { document.getElementById('secretSection').classList.add('active'); playChimeSound(); });
+  function closeSecret() { document.getElementById('secretSection').classList.remove('active'); }
+
+  // ========== AI-GENERATED LOVE STORIES: 150+ MAGAZINE PAGES ==========
+  function generateLoveStories() {
+    const titles = [
+      "When Stars Aligned", "Your Smell of Roses", "The First Glance", "Silent Promises", "Canvas of Hearts",
+      "Midnight Confessions", "Eternal Sunshine", "The Art of Us", "Whispers in the Wind", "Infinity and You",
+      "The Melody of Your Name", "Golden Hour Love", "A Love Beyond Time", "Cherished Moments", "My Heart's Compass",
+      "Unwritten Chapters", "The Symphony of Souls", "Where Love Blooms", "Tides of Forever", "Serendipity's Gift"
+    ];
+    const excerpts = [
+      "From the moment our eyes met, the universe whispered that we were destined. Every day with her feels like a beautiful dream woven with silk and starlight.",
+      "Her presence is like a warm embrace on a winter night. She carries grace that transforms ordinary moments into extraordinary memories.",
+      "In her laughter, I discovered my purpose. She is the reason I believe in magic, in forever, in the boundless power of love.",
+      "She paints my world in hues of pink and blue, colors of tenderness and depth. With her, life is a masterpiece.",
+      "Her kindness echoes through my days. She taught me that love isn't just a feeling — it's a home.",
+      "Every glance she gives me is a sonnet. Her eyes hold galaxies, and I am lost in them willingly.",
+      "Loving her is like reading the most beautiful book — each page more captivating than the last, and I never want it to end.",
+      "She embodies resilience, beauty, and warmth. Her soul shines brighter than any diamond.",
+      "Our journey is filled with whispered secrets and shared sunsets. She is my greatest adventure.",
+      "I see our future in every smile she shares — a lifetime of laughter, growth, and unwavering devotion."
+    ];
+    const authors = ["Forever Yours", "Eternal Admirer", "Your Devoted", "Love's Poet", "Soulmate's Voice"];
+    const imagePool = ['img1.png', 'img2.png', 'img3.png', 'img4.png', 'img5.png'];
+    
+    const totalPages = 156; // 150+ pages magazine
+    const stories = [];
+    for(let i=0; i<totalPages; i++) {
+      const titleIdx = i % titles.length;
+      const excerptIdx = i % excerpts.length;
+      const authorIdx = i % authors.length;
+      const randomImg = imagePool[Math.floor(Math.random() * imagePool.length)];
+      const customExcerpt = excerpts[excerptIdx] + ` This is chapter ${i+1} of our infinite story. Her grace illuminates every corner of my existence. 💙🩷`;
+      stories.push({
+        id: i,
+        title: titles[titleIdx] + ` ✦ Vol.${i+1}`,
+        excerpt: customExcerpt,
+        author: `— ${authors[authorIdx]}`,
+        img: randomImg
+      });
+    }
+    return stories;
+  }
+
+  function renderMagazineGrid(containerId, stories, isLetterMode = false, isVowMode = false, isTimeline = false) {
+    const container = document.getElementById(containerId);
+    if(!container) return;
+    container.innerHTML = '';
+    stories.forEach(story => {
+      const article = document.createElement('div');
+      article.className = 'magazine-article';
+      let extraClass = '';
+      let innerHtml = `
+        <img class="article-img" src="${story.img}" onerror="this.src='https://placehold.co/400x300/ff69b4/white?text=Love+Story'">
+        <div class="article-content">
+          <div class="article-title">${story.title}</div>
+          <div class="article-excerpt">${story.excerpt}</div>
+          <div class="love-quote" style="margin-top:12px;">${story.author}</div>
+      `;
+      if(isLetterMode) innerHtml = `<img class="article-img" src="${story.img}" onerror="this.src='https://placehold.co/400x300/6495ed/white?text=Letter'"><div class="article-content"><div class="article-title">✉️ ${story.title}</div><div class="article-excerpt">${story.excerpt}</div><div class="love-quote">With all my heart, ${story.author}</div></div>`;
+      if(isVowMode) innerHtml = `<img class="article-img" src="${story.img}" onerror="this.src='https://placehold.co/400x300/ff69b4/white?text=Vow'"><div class="article-content"><div class="article-title">💍 ${story.title}</div><div class="article-excerpt">${story.excerpt}</div><div class="love-quote">I vow to love you endlessly. ${story.author}</div></div>`;
+      if(isTimeline) innerHtml = `<img class="article-img" src="${story.img}" onerror="this.src='https://placehold.co/400x300/6495ed/white?text=Memory'"><div class="article-content"><div class="article-title">📖 ${story.title}</div><div class="article-excerpt">${story.excerpt}</div><div class="love-quote">Memory #${story.id+1} • Forever etched in time.</div></div>`;
+      article.innerHTML = innerHtml;
+      article.onclick = () => { alert(`💙🩷 "${story.title}"\n\n${story.excerpt}\n\n— Every word is for you.`); playChimeSound(); };
+      container.appendChild(article);
+    });
+  }
+
+  let allStories = [];
+  function init() {
+    initSounds();
+    initMusic();
+    updateGreeting();
+    updateLoveMeter();
+    startCountdown();
+    startTypingAnimation();
+    allStories = generateLoveStories();
+    
+    renderMagazineGrid('loveStoryGrid', allStories, false, false, false);
+    // Heart Letters: variation using same stories but different vibe
+    const letterStories = allStories.map(s => ({ ...s, title: "💌 " + s.title, excerpt: "My Dearest Love, " + s.excerpt.slice(0,180) + "... I adore you endlessly." }));
+    renderMagazineGrid('lettersGrid', letterStories, true, false, false);
+    const vowStories = allStories.map(s => ({ ...s, title: "🤍 Eternal Vow: " + s.title.split(' ✦')[0], excerpt: "Before the universe and all time, I promise: " + s.excerpt.slice(0,160) + " I choose you, today and forevermore." }));
+    renderMagazineGrid('vowsGrid', vowStories, false, true, false);
+    const timelineStories = allStories.map(s => ({ ...s, title: "🌟 " + s.title, excerpt: "On this day, our love wrote another beautiful chapter: " + s.excerpt.slice(0,170) + " This memory glows forever." }));
+    renderMagazineGrid('timelineGrid', timelineStories, false, false, true);
+    
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => switchPage(btn.getAttribute('data-page'))));
+    const savedTheme = localStorage.getItem('theme');
+    if(savedTheme) setTheme(savedTheme);
+    setInterval(updateGreeting, 60000);
+    
+    // floating hearts
+    setInterval(() => {
+      const heart = document.createElement('div');
+      heart.innerHTML = ['💙','🩷','💖','💕','🌹'][Math.floor(Math.random()*5)];
+      heart.style.position = 'fixed';
+      heart.style.left = Math.random() * 100 + '%';
+      heart.style.bottom = '-20px';
+      heart.style.fontSize = (Math.random() * 20 + 12) + 'px';
+      heart.style.opacity = '0.55';
+      heart.style.pointerEvents = 'none';
+      heart.style.zIndex = '999';
+      heart.style.animation = 'floatUp 6s linear forwards';
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 6000);
+    }, 1800);
+    const style = document.createElement('style');
+    style.textContent = `@keyframes floatUp { 0% { transform: translateY(0) rotate(0deg); opacity: 0.6; } 100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; } }`;
+    document.head.appendChild(style);
+  }
+
+  // PWA manifest stub
+  const manifest = { name: "Timeless Love Magazine", short_name: "LoveStory", start_url: ".", display: "standalone", theme_color: "#ff69b4", icons: [{ src: "icon.png", sizes: "192x192", type: "image/png" }] };
+  const manifestBlob = new Blob([JSON.stringify(manifest)], {type: "application/json"});
+  const manifestURL = URL.createObjectURL(manifestBlob);
+  const link = document.createElement('link');
+  link.rel = 'manifest';
+  link.href = manifestURL;
+  document.head.appendChild(link);
+</script>
+</body>
+</html>
