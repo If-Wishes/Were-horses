@@ -523,7 +523,7 @@
   }
 
   let audio = null, isPlaying = false;
-  function initMusic() { audio = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'); audio.loop = true; audio.volume = 0.2; }
+  function initMusic() { audio = new Audio('https://cds.gaalian.xyz/wp-content/uploads/2023/09/2Baba---African-Queen.mp3'); audio.loop = true; audio.volume = 0.2; }
   function toggleMusic() { if (!audio) return; if (isPlaying) { audio.pause(); document.querySelector('.music-control i').className = 'fas fa-music-slash'; } else { audio.play(); document.querySelector('.music-control i').className = 'fas fa-music'; } isPlaying = !isPlaying; }
 
   const startDate = new Date('2023-01-01');
